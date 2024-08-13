@@ -54,7 +54,7 @@ const cli = async <T>(commandName: string, cliArgs: string[] = []) => {
     const cliCommand = `npx sfdx ${commandName} ${cliArgs.join(" ")}`;
     console.log(cliCommand);
     result = (
-      JSON.parse(execSync(cliCommand).toString()) as SfdxCommandResult<T>
+      JSON.parse(execSync(cliCommand, { maxBuffer: 1024 * 1024 * 10 }).toString()) as SfdxCommandResult<T>
     ).result;
   } catch (err) {
     throw err;
