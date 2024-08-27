@@ -55,10 +55,11 @@ const cli = async <T>(commandName: string, cliArgs: string[] = []) => {
   let result = null as T;
   try {
     const tempFile = path.join(os.tmpdir(), 'cliArgs.txt');
-    fs.writeFileSync(tempFile, cliArgs.join(" "));
+    fs.writeFileSync(tempFile, cliArgs.join("\n"));
 
     // Modify the command to read arguments from the file
-    const cliCommand = `npx sfdx ${commandName} $(cat ${tempFile})`;
+    const cliCommand = `xargs -a ${tempFile} npx sfdx ${commandName}`;
+    console.log(cliCommand);
 
     result = (
       JSON.parse(execSync(cliCommand).toString()) as SfdxCommandResult<T>
