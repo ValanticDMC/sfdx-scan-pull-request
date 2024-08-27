@@ -51,7 +51,11 @@ type SfdxCommandResult<T> = {
 const cli = async <T>(commandName: string, cliArgs: string[] = []) => {
   let result = null as T;
   try {
-    const cliCommand = `npx sfdx ${commandName} ${cliArgs.join(" ")}`;
+    const maxArgs = 1000;  // Adjust this number based on what your system can handle
+    // Truncate the arguments if they exceed maxArgs
+    const truncatedArgs = cliArgs.slice(0, maxArgs);
+    
+    const cliCommand = `npx sfdx ${commandName} ${truncatedArgs.join(" ")}`;
     
     result = (
       JSON.parse(execSync(cliCommand).toString()) as SfdxCommandResult<T>
