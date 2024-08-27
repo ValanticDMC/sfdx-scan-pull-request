@@ -12,9 +12,6 @@
  */
 
 import { execSync } from "child_process";
-import * as fs from "fs";
-import * as os from "os";
-import * as path from "path";
 
 export type ScannerFinding = {
   fileName: string;
@@ -54,19 +51,11 @@ type SfdxCommandResult<T> = {
 const cli = async <T>(commandName: string, cliArgs: string[] = []) => {
   let result = null as T;
   try {
-    const tempFile = path.join(os.tmpdir(), 'cliArgs.txt');
-    fs.writeFileSync(tempFile, cliArgs.join("\n"));
-
-    // Modify the command to read arguments from the file
-    const cliCommand = `xargs -a ${tempFile} npx sfdx ${commandName}`;
-    console.log(cliCommand);
-
+    const cliCommand = `npx sfdx ${commandName} ${cliArgs.join(" ")}`;
+    
     result = (
       JSON.parse(execSync(cliCommand).toString()) as SfdxCommandResult<T>
     ).result;
-
-    // Clean up the temporary file
-    fs.unlinkSync(tempFile);
   } catch (err) {
     throw err;
   }
