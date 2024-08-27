@@ -51,7 +51,7 @@ type SfdxCommandResult<T> = {
 const cli = async <T>(commandName: string, cliArgs: string[] = []) => {
   let result = null as T;
   try {
-    const maxArgs = 500;  // Adjust this number based on what your system can handle
+    const maxArgs = 250;  // Adjust this number based on what your system can handle
     // Truncate the arguments if they exceed maxArgs
     const truncatedArgs = cliArgs.slice(0, maxArgs);
 
