@@ -49,6 +49,8 @@ function initialSetup() {
     tsConfig: getInput("tsconfig"),
   } as ScannerFlags;
 
+  
+
   // TODO: validate inputs. Technically the scanner's "max" violation level is 3,
   // where: 1 (high), 2 (moderate), and 3 (low)
   const inputs: PluginInputs = {
@@ -232,7 +234,25 @@ async function main() {
     console.log("There are no files to scan - exiting now.");
     return;
   }
-  scannerFlags.target = filesToScan.join(",");
+  const relevantExtensions = [
+    ".cls",        // Apex classes
+    ".trigger",    // Apex triggers
+    ".page",       // Visualforce pages
+    ".component",  // Visualforce components
+    ".js",         // JavaScript files
+    ".html",       // HTML files in LWC
+    ".cmp",        // Aura components
+    ".evt",        // Aura events
+    ".design",     // Design files for Aura components
+    ".css",        // CSS files
+  ];
+
+  // Filter files by relevant extensions
+  const filteredFiles = filesToScan.filter(file =>
+    relevantExtensions.some(ext => file.endsWith(ext))
+  );
+
+  scannerFlags.target = filteredFiles.join(",");
 
   if (inputs.customPmdRules) {
     registerCustomPmdRules(inputs.customPmdRules);
