@@ -230,10 +230,6 @@ async function main() {
       );
 
   const filesToScan = getFilesToScan(filePathToChangedLines, inputs.target);
-  if (filesToScan.length === 0) {
-    console.log("There are no files to scan - exiting now.");
-    return;
-  }
   const relevantExtensions = [
     ".cls",        // Apex classes
     ".trigger",    // Apex triggers
@@ -251,6 +247,12 @@ async function main() {
   const filteredFiles = filesToScan.filter(file =>
     relevantExtensions.some(ext => file.endsWith(ext))
   );
+  
+  if (filteredFiles.length === 0) {
+    console.log("There are no files to scan - exiting now.");
+    return;
+  }
+  
 
   scannerFlags.target = filteredFiles.join(",");
 
